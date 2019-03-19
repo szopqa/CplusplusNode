@@ -1,11 +1,14 @@
+#pragma once
+#include "Iterable.cpp"
+
 template <typename list_element>
-class List
+class List : public Iterable<list_element>
 {
 protected:
-    list_element* firstElement;
+    list_element firstElement;
     unsigned int numOfElements = 0;
     
-    virtual list_element* onAddElement(list_element* addedElement)
+    virtual list_element onAddElement(list_element addedElement)
     {
         this->numOfElements++;
         return addedElement;
@@ -23,7 +26,24 @@ public:
         this->numOfElements = 0;
     }
 
-    virtual list_element* addElement(list_element* newElem)
+    Iterator<list_element>* getIterator() override
+    {
+        class Iter: public Iterator<list_element>
+        {
+            protected:
+                list_element currentElement;
+            public: 
+                Iter(list_element firstElem) { this->currentElement = firstElem; }
+                list_element next() override
+                {   this->currentElement = this->currentElement->getNext();
+                    return this->currentElement;
+                }
+                bool hasNext() override { return this->currentElement->getNext() != nullptr; }
+        };
+        return new Iter(this->firstElement);
+    };
+
+    virtual list_element addElement(list_element newElem)
     {
         if(this->firstElement == nullptr)
         {
@@ -31,7 +51,7 @@ public:
             return this->onAddElement(newElem);
         }
 
-        list_element* iterator = this->firstElement;
+        list_element iterator = this->firstElement;
         while(iterator->getNext() != nullptr)
         {
             iterator = iterator->getNext();
@@ -45,7 +65,7 @@ public:
 
     virtual void deleteElement(std::string elementId)
     {
-        list_element* iterator = this->firstElement;
+        list_element iterator = this->firstElement;
 
         if(iterator == nullptr)
         {
@@ -68,7 +88,7 @@ public:
     
     virtual void showElements()
     {
-        list_element* iterator = this->firstElement;
+        list_element iterator = this->firstElement;
         
         if(iterator == nullptr)
         {
@@ -85,7 +105,7 @@ public:
 
     virtual void clear()
     {
-        list_element* iterator = this->firstElement;
+        list_element iterator = this->firstElement;
         
         if(iterator == nullptr)
         {

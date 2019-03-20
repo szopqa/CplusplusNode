@@ -1,3 +1,5 @@
+#pragma once
+
 template <typename iter_element>
 class Iterator
 {

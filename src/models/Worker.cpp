@@ -12,10 +12,8 @@ private:
 
 public:
     Worker(std::string name, std::string surname, int age)
+        : name(name), surname(surname), age(age)
     {
-        this->name = name;
-        this->surname = surname;
-        this->age = age;
         this->previous = nullptr;
         this->next = nullptr;
     }

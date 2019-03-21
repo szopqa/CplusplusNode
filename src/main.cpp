@@ -2,7 +2,6 @@
 #include <string>
 #include "./models/Worker.cpp"
 #include "./lists/WorkersList.cpp"
-#include "./lists/ListService.cpp"
 
 int main(){
     WorkersList* workersList = new WorkersList();

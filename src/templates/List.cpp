@@ -6,6 +6,7 @@ class List : public Iterable<list_element>
 {
 protected:
     list_element firstElement;
+    list_element lastElement;
     unsigned int numOfElements = 0;
     
     list_element setFirstElement(list_element newElement)
@@ -14,16 +15,20 @@ protected:
         return this->firstElement;
     }
 
+    list_element setLastElement(list_element newElement)
+    {
+        this->lastElement = newElement;
+        return this->lastElement;
+    }
+
 public:
     List()
-    {
-        this->firstElement = nullptr;
-        this->numOfElements = 0;
+        :firstElement(nullptr), lastElement(nullptr), numOfElements(0)
+    { 
     }
 
     bool isEmpty() { return this->firstElement == nullptr; }
 
-    /* Iterator returns each list element as long as there is nothing left */
     virtual Iterator<list_element>* getIterator() override
     {
         class Iter: public Iterator<list_element>
@@ -54,19 +59,14 @@ public:
         if(this->firstElement == nullptr)
         {
             this->setFirstElement(newElem);
+            this->setLastElement(newElem);
             return this->onAddElement(newElem);
         }
 
-        list_element iterator = this->firstElement;
-        while(iterator->getNext() != nullptr)
-        {
-            iterator = iterator->getNext();
-        }
+        this->lastElement->setNextTo(newElem);
+        newElem->setPreviousTo(this->lastElement);
 
-        iterator->setNextTo(newElem);
-        newElem->setPreviousTo(iterator);
-
-        return onAddElement(newElem);
+        return onAddElement(this->setLastElement(newElem));
     };
 
     /* Should be invoked whenever item is removed from list */
@@ -138,21 +138,18 @@ public:
         }
     };
 
-    /* Removes all elements from list */
+    /* Removes all elements from list - removes from list's beginning */
     virtual void clear()
     {
-        list_element iterator = this->firstElement;
-        
-        if(iterator == nullptr)
+        if(this->firstElement == nullptr)
         {
             std::cout<<"List is empty"<<std::endl;
             return;
         }
 
-        while(iterator != nullptr)
+        while(this->firstElement != nullptr)
         {
-            std::string id = iterator->getId();
-            iterator = iterator->getNext();
+            std::string id = this->firstElement->getId();
             this->deleteElement(id);
         }
     };

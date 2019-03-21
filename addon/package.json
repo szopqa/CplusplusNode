@@ -1,0 +1,12 @@
+{
+    "name": "lists_addon",
+    "version": "0.0.1",
+    "gypfile": true,
+    "main": "./build/Release/lists_addon",
+    "license": "MIT",
+    "dependencies": {
+        "nan": "^2.3.3",
+        "node-gyp": "^3.8.0",
+        "bindings": "~1.2.1"
+    }
+}
